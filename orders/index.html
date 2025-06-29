@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - Dern Market</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'poppins': ['Poppins', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                        'bounce-in': 'bounceIn 0.6s ease-out',
+                        'pulse-slow': 'pulse 3s ease-in-out infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        }
+        .glass-effect {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-inter">
+    <!-- Header -->
+    <header class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <a href="../index.html" class="flex items-center space-x-3 hover:scale-105 transition-transform duration-300">
+                    <div class="w-12 h-12 gradient-bg rounded-xl flex items-center justify-center">
+                        <i class="fas fa-store text-xl text-white"></i>
+                    </div>
+                    <div>
+                        <div class="text-xl font-bold text-gray-800 font-poppins">Dern Market</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-wider">Premium Shopping</div>
+                    </div>
+                </a>
+                
+                <!-- Navigation -->
+                <nav class="hidden md:flex items-center space-x-6">
+                    <a href="../index.html" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 flex items-center space-x-2">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="../cart/index.html" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 flex items-center space-x-2">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Cart</span>
+                    </a>
+                    <a href="index.html" class="text-blue-600 font-semibold flex items-center space-x-2">
+                        <i class="fas fa-box"></i>
+                        <span>Orders</span>
+                    </a>
+                    <a href="../faq/index.html" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 flex items-center space-x-2">
+                        <i class="fas fa-question-circle"></i>
+                        <span>FAQ</span>
+                    </a>
+                </nav>
+                
+                <!-- User Info -->
+                <div class="user-info" id="userInfo"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <div class="flex items-center space-x-4 mb-4">
+                <div class="w-12 h-12 gradient-bg rounded-xl flex items-center justify-center">
+                    <i class="fas fa-box text-xl text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800 font-poppins">My Orders</h1>
+                    <p class="text-gray-600">Track and manage your order history</p>
+                </div>
+            </div>
+            
+            <!-- Breadcrumb -->
+            <nav class="flex items-center space-x-2 text-sm text-gray-500">
+                <a href="../index.html" class="hover:text-blue-600 transition-colors duration-300">Home</a>
+                <i class="fas fa-chevron-right text-xs"></i>
+                <span class="text-blue-600 font-medium">Orders</span>
+            </nav>
+        </div>
+
+        <!-- Order Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl p-6 shadow-lg text-center">
+                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-shopping-bag text-blue-600 text-xl"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-800" id="totalOrders">0</div>
+                <div class="text-gray-600">Total Orders</div>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-lg text-center">
+                <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-800" id="pendingOrders">0</div>
+                <div class="text-gray-600">Pending</div>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-lg text-center">
+                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-800" id="completedOrders">0</div>
+                <div class="text-gray-600">Completed</div>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-lg text-center">
+                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-dollar-sign text-purple-600 text-xl"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-800" id="totalSpent">0</div>
+                <div class="text-gray-600">Total Spent</div>
+            </div>
+        </div>
+
+        <!-- Filter and Search -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <div class="flex flex-col md:flex-row gap-4 items-center">
+                <!-- Search -->
+                <div class="flex-1 relative">
+                    <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input 
+                        type="text" 
+                        id="searchInput"
+                        placeholder="Search orders by ID..." 
+                        class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors duration-300"
+                        oninput="searchOrders()"
+                    >
+                </div>
+                
+                <!-- Status Filter -->
+                <select id="statusFilter" onchange="filterOrders()" class="px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors duration-300">
+                    <option value="all">All Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="processing">Processing</option>
+                    <option value="shipped">Shipped</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+                
+                <!-- Date Filter -->
+                <select id="dateFilter" onchange="filterOrders()" class="px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors duration-300">
+                    <option value="all">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                    <option value="year">This Year</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Orders List -->
+        <div class="space-y-6" id="ordersList">
+            <!-- Orders will be populated here -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden text-center py-16">
+            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-box-open text-gray-400 text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">No orders found</h3>
+            <p class="text-gray-600 mb-6">You haven't placed any orders yet</p>
+            <a href="../index.html" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors duration-300 inline-flex items-center space-x-2">
+                <i class="fas fa-shopping-bag"></i>
+                <span>Start Shopping</span>
+            </a>
+        </div>
+
+        <!-- Login Required State -->
+        <div id="loginRequired" class="hidden text-center py-16">
+            <div class="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-user-lock text-blue-500 text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">Login Required</h3>
+            <p class="text-gray-600 mb-6">Please login to view your orders</p>
+            <a href="../login/index.html?from=orders" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors duration-300 inline-flex items-center space-x-2">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Login Now</span>
+            </a>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center mt-8" id="pagination"></div>
+    </main>
+
+    <!-- Order Details Modal -->
+    <div id="orderModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-bounce-in">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-bold text-gray-800">Order Details</h3>
+                    <button onclick="closeOrderModal()" class="text-gray-400 hover:text-gray-600 transition-colors duration-300">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="orderModalContent" class="p-6">
+                <!-- Order details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed top-6 right-6 z-50 space-y-4"></div>
+
+    <script>
+        const ORDERS_PER_PAGE = 5;
+        let currentPage = 1;
+        let orders = [];
+        let filteredOrders = [];
+        let products = [];
+
+        // User Management Functions
+        function checkAdminRedirect() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user && user.isAdmin) {
+                window.location.href = '../admin/index.html';
+            }
+        }
+
+        function renderUserInfo() {
+            const userInfoDiv = document.getElementById('userInfo');
+            const user = JSON.parse(localStorage.getItem('user'));
+
+            if (user) {
+                userInfoDiv.innerHTML = `
+                    <div class="flex items-center space-x-4">
+                        <span class="text-gray-700 font-medium">
+                            <i class="fas fa-user mr-2"></i>
+                            ${user.name}
+                        </span>
+                        <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors duration-300">
+                            <i class="fas fa-sign-out-alt mr-2"></i>
+                            Logout
+                        </button>
+                    </div>
+                `;
+            } else {
+                userInfoDiv.innerHTML = `
+                    <div class="flex items-center space-x-4">
+                        <a href="../login/index.html?from=orders" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">
+                            <i class="fas fa-sign-in-alt mr-2"></i>
+                            Login
+                        </a>
+                        <span class="text-gray-400">|</span>
+                        <a href="../register/index.html" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300">
+                            <i class="fas fa-user-plus mr-2"></i>
+                            Register
+                        </a>
+                    </div>
+                `;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            localStorage.removeItem('cart');
+            renderUserInfo();
+            showToast('Successfully logged out', 'success');
+            setTimeout(() => window.location.reload(), 1000);
+        }
+
+        // Fetch products from API
+        async function fetchProducts() {
+            try {
+                const response = await fetch('https://dern-market-backend.up.railway.app/api/products', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                if (!response.ok) throw new Error('Failed to fetch products');
+                products = await response.json();
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        }
+
+        // Fetch orders from API
+        async function fetchOrders() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            
+            if (!user) {
+                document.getElementById('loginRequired').classList.remove('hidden');
+                return;
+            }
+
+            try {
+                const response = await fetch(`https://dern-market-backend.up.railway.app/api/orders?userId=${user.id}`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                if (!response.ok) throw new Error('Failed to fetch orders');
+                orders = await response.json();
+                filteredOrders = [...orders];
+                
+                updateOrderStats();
+                renderOrders();
+                renderPagination();
+                
+            } catch (error) {
+                showToast(`Error loading orders: ${error.message}`, 'error');
+            }
+        }
+
+        // Update order statistics
+        function updateOrderStats() {
+            const totalOrders = orders.length;
+            const pendingOrders = orders.filter(order => order.status === 'pending').length;
+            const completedOrders = orders.filter(order => order.status === 'completed').length;
+            
+            let totalSpent = 0;
+            orders.forEach(order => {
+                if (order.items && order.items.length > 0) {
+                    order.items.forEach(item => {
+                        const product = products.find(p => p.id === item.productId);
+                        if (product) {
+                            totalSpent += product.price * item.quantity;
+                        }
+                    });
+                }
+            });
+
+            document.getElementById('totalOrders').textContent = totalOrders;
+            document.getElementById('pendingOrders').textContent = pendingOrders;
+            document.getElementById('completedOrders').textContent = completedOrders;
+            document.getElementById('totalSpent').textContent = formatPrice(totalSpent) + ' UZS';
+        }
+
+        // Format price
+        function formatPrice(price) {
+            return new Intl.NumberFormat('uz-UZ').format(price);
+        }
+
+        // Get status config
+        function getStatusConfig(status) {
+            const configs = {
+                pending: { color: 'text-yellow-600', bg: 'bg-yellow-100', icon: 'fas fa-clock' },
+                processing: { color: 'text-blue-600', bg: 'bg-blue-100', icon: 'fas fa-cog fa-spin' },
+                shipped: { color: 'text-purple-600', bg: 'bg-purple-100', icon: 'fas fa-truck' },
+                completed: { color: 'text-green-600', bg: 'bg-green-100', icon: 'fas fa-check-circle' },
+                cancelled: { color: 'text-red-600', bg: 'bg-red-100', icon: 'fas fa-times-circle' }
+            };
+            return configs[status] || configs.pending;
+        }
+
+        // Render orders
+        function renderOrders() {
+            const ordersList = document.getElementById('ordersList');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (filteredOrders.length === 0) {
+                ordersList.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            
+            const start = (currentPage - 1) * ORDERS_PER_PAGE;
+            const end = start + ORDERS_PER_PAGE;
+            const pageOrders = filteredOrders.slice(start, end);
+            
+            ordersList.innerHTML = pageOrders.map(order => {
+                let totalPrice = 0;
+                let itemCount = 0;
+                
+                if (order.items && order.items.length > 0) {
+                    order.items.forEach(item => {
+                        const product = products.find(p => p.id === item.productId);
+                        if (product) {
+                            totalPrice += product.price * item.quantity;
+                            itemCount += item.quantity;
+                        }
+                    });
+                }
+                
+                const statusConfig = getStatusConfig(order.status);
+                
+                return `
+                    <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                            <div class="flex items-center space-x-4 mb-4 md:mb-0">
+                                <div class="w-12 h-12 ${statusConfig.bg} rounded-lg flex items-center justify-center">
+                                    <i class="${statusConfig.icon} ${statusConfig.color}"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-800">Order #${order.id}</h3>
+                                    <p class="text-gray-600">${new Date(order.createdAt).toLocaleDateString('en-US', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric'
+                                    })}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-4">
+                                <div class="text-right">
+                                    <div class="text-lg font-bold text-gray-800">${formatPrice(totalPrice)} UZS</div>
+                                    <div class="text-sm text-gray-600">${itemCount} items</div>
+                                </div>
+                                <span class="px-3 py-1 ${statusConfig.bg} ${statusConfig.color} rounded-full text-sm font-medium capitalize">
+                                    ${order.status}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm text-gray-600">
+                                Payment: <span class="font-medium">${order.paymentMethod === 'karta' ? 'Card' : 'Cash'}</span>
+                            </div>
+                            <button onclick="showOrderDetails(${order.id})" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300 flex items-center space-x-2">
+                                <i class="fas fa-eye"></i>
+                                <span>View Details</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Search orders
+        function searchOrders() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            applyFilters();
+        }
+
+        // Filter orders
+        function filterOrders() {
+            applyFilters();
+        }
+
+        // Apply all filters
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+            
+            filteredOrders = orders.filter(order => {
+                // Search filter
+                const matchesSearch = searchTerm === '' || order.id.toString().includes(searchTerm);
+                
+                // Status filter
+                const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
+                
+                // Date filter
+                let matchesDate = true;
+                if (dateFilter !== 'all') {
+                    const orderDate = new Date(order.createdAt);
+                    const now = new Date();
+                    
+                    switch (dateFilter) {
+                        case 'today':
+                            matchesDate = orderDate.toDateString() === now.toDateString();
+                            break;
+                        case 'week':
+                            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                            matchesDate = orderDate >= weekAgo;
+                            break;
+                        case 'month':
+                            matchesDate = orderDate.getMonth() === now.getMonth() && orderDate.getFullYear() === now.getFullYear();
+                            break;
+                        case 'year':
+                            matchesDate = orderDate.getFullYear() === now.getFullYear();
+                            break;
+                    }
+                }
+                
+                return matchesSearch && matchesStatus && matchesDate;
+            });
+            
+            currentPage = 1;
+            renderOrders();
+            renderPagination();
+        }
+
+        // Render pagination
+        function renderPagination() {
+            const paginationDiv = document.getElementById('pagination');
+            const totalPages = Math.ceil(filteredOrders.length / ORDERS_PER_PAGE);
+            
+            if (totalPages <= 1) {
+                paginationDiv.innerHTML = '';
+                return;
+            }
+            
+            paginationDiv.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} 
+                            class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    
+                    ${Array.from({ length: totalPages }, (_, i) => i + 1).map(page => `
+                        <button onclick="changePage(${page})" 
+                                class="px-4 py-2 border rounded-lg transition-colors duration-300 ${
+                                    page === currentPage 
+                                        ? 'bg-blue-500 text-white border-blue-500' 
+                                        : 'border-gray-300 hover:bg-gray-50'
+                                }">
+                            ${page}
+                        </button>
+                    `).join('')}
+                    
+                    <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} 
+                            class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            `;
+        }
+
+        // Change page
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredOrders.length / ORDERS_PER_PAGE);
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                renderOrders();
+                renderPagination();
+            }
+        }
+
+        // Show order details
+        function showOrderDetails(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (!order) return;
+            
+            let totalPrice = 0;
+            let itemsHtml = '';
+            
+            if (order.items && order.items.length > 0) {
+                order.items.forEach(item => {
+                    const product = products.find(p => p.id === item.productId);
+                    if (product) {
+                        totalPrice += product.price * item.quantity;
+                        itemsHtml += `
+                            <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-box text-gray-400"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">${product.name}</h4>
+                                        <p class="text-gray-600 text-sm">${product.description}</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-semibold text-gray-800">${formatPrice(product.price * item.quantity)} UZS</div>
+                                    <div class="text-gray-600 text-sm">Qty: ${item.quantity}</div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+            } else {
+                itemsHtml = '<p class="text-gray-600 text-center py-4">No items in this order</p>';
+            }
+            
+            const statusConfig = getStatusConfig(order.status);
+            
+            document.getElementById('orderModalContent').innerHTML = `
+                <div class="space-y-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-800">Order #${order.id}</h4>
+                            <p class="text-gray-600">${new Date(order.createdAt).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            })}</p>
+                        </div>
+                        <span class="px-4 py-2 ${statusConfig.bg} ${statusConfig.color} rounded-full text-sm font-medium capitalize flex items-center space-x-2">
+                            <i class="${statusConfig.icon}"></i>
+                            <span>${order.status}</span>
+                        </span>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+                        <div>
+                            <div class="text-sm text-gray-600">Payment Method</div>
+                            <div class="font-semibold">${order.paymentMethod === 'karta' ? 'Credit/Debit Card' : 'Cash on Delivery'}</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-600">Total Amount</div>
+                            <div class="font-semibold text-lg">${formatPrice(totalPrice)} UZS</div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h5 class="font-semibold text-gray-800 mb-4">Order Items</h5>
+                        <div class="space-y-3">
+                            ${itemsHtml}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('orderModal').classList.remove('hidden');
+        }
+
+        // Close order modal
+        function closeOrderModal() {
+            document.getElementById('orderModal').classList.add('hidden');
+        }
+
+        // Toast notification
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            const bgColors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500',
+                warning: 'bg-yellow-500'
+            };
+            
+            const icons = {
+                success: 'fas fa-check-circle',
+                error: 'fas fa-exclamation-circle',
+                info: 'fas fa-info-circle',
+                warning: 'fas fa-exclamation-triangle'
+            };
+            
+            toast.className = `${bgColors[type]} text-white px-6 py-4 rounded-xl shadow-lg transform translate-x-full transition-transform duration-300 flex items-center space-x-3 min-w-80`;
+            toast.innerHTML = `
+                <i class="${icons[type]}"></i>
+                <span class="font-medium">${message}</span>
+                <button onclick="this.parentElement.remove()" class="ml-auto text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-x-full');
+            }, 100);
+            
+            setTimeout(() => {
+                toast.classList.add('translate-x-full');
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toastContainer.removeChild(toast);
+                    }
+                }, 300);
+            }, 5000);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async () => {
+            checkAdminRedirect();
+            renderUserInfo();
+            await fetchProducts();
+            await fetchOrders();
+        });
+    </script>
+</body>
+</html>

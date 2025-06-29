@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Dern Market</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'poppins': ['Poppins', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-down': 'slideDown 0.3s ease-out',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                        'bounce-in': 'bounceIn 0.6s ease-out',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        }
+        .glass-effect {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-inter">
+    <!-- Header -->
+    <header class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <a href="../index.html" class="flex items-center space-x-3 hover:scale-105 transition-transform duration-300">
+                    <div class="w-12 h-12 gradient-bg rounded-xl flex items-center justify-center">
+                        <i class="fas fa-store text-xl text-white"></i>
+                    </div>
+                    <div>
+                        <div class="text-xl font-bold text-gray-800 font-poppins">Dern Market</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-wider">Premium Shopping</div>
+                    </div>
+                </a>
+                
+                <!-- Navigation -->
+                <nav class="hidden md:flex items-center space-x-6">
+                    <a href="../index.html" class="text-gray-600 hover:text-purple-600 transition-colors duration-300 flex items-center space-x-2">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="../cart/index.html" class="text-gray-600 hover:text-purple-600 transition-colors duration-300 flex items-center space-x-2">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Cart</span>
+                    </a>
+                    <a href="../orders/index.html" class="text-gray-600 hover:text-purple-600 transition-colors duration-300 flex items-center space-x-2">
+                        <i class="fas fa-box"></i>
+                        <span>Orders</span>
+                    </a>
+                    <a href="index.html" class="text-purple-600 font-semibold flex items-center space-x-2">
+                        <i class="fas fa-question-circle"></i>
+                        <span>FAQ</span>
+                    </a>
+                </nav>
+                
+                <!-- User Info -->
+                <div class="user-info" id="userInfo"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-16">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <div class="animate-bounce-in">
+                <div class="w-20 h-20 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-question-circle text-4xl text-white"></i>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold font-poppins mb-4">
+                    Frequently Asked Questions
+                </h1>
+                <p class="text-xl text-white text-opacity-90 max-w-2xl mx-auto">
+                    Find answers to common questions about our products, services, and policies
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search and Filter Section -->
+    <section class="py-8 bg-white border-b">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row gap-4 items-center">
+                <!-- Search Box -->
+                <div class="flex-1 relative">
+                    <div class="relative">
+                        <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input 
+                            type="text" 
+                            id="searchInput"
+                            placeholder="Search FAQ..." 
+                            class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors duration-300"
+                            oninput="searchFAQ()"
+                        >
+                    </div>
+                </div>
+                
+                <!-- Category Filter -->
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="filterByCategory('all')" class="category-btn active px-4 py-2 rounded-lg font-medium transition-all duration-300">
+                        All
+                    </button>
+                    <button onclick="filterByCategory('orders')" class="category-btn px-4 py-2 rounded-lg font-medium transition-all duration-300">
+                        Orders
+                    </button>
+                    <button onclick="filterByCategory('payment')" class="category-btn px-4 py-2 rounded-lg font-medium transition-all duration-300">
+                        Payment
+                    </button>
+                    <button onclick="filterByCategory('shipping')" class="category-btn px-4 py-2 rounded-lg font-medium transition-all duration-300">
+                        Shipping
+                    </button>
+                    <button onclick="filterByCategory('account')" class="category-btn px-4 py-2 rounded-lg font-medium transition-all duration-300">
+                        Account
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Content -->
+    <main class="py-12">
+        <div class="max-w-4xl mx-auto px-6">
+            <!-- FAQ Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div class="bg-white rounded-xl p-6 shadow-lg text-center">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-question text-blue-600 text-xl"></i>
+                    </div>
+                    <div class="text-2xl font-bold text-gray-800" id="totalQuestions">13</div>
+                    <div class="text-gray-600">Total Questions</div>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-lg text-center">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                    </div>
+                    <div class="text-2xl font-bold text-gray-800" id="answeredQuestions">13</div>
+                    <div class="text-gray-600">Answered</div>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-lg text-center">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-clock text-purple-600 text-xl"></i>
+                    </div>
+                    <div class="text-2xl font-bold text-gray-800">24/7</div>
+                    <div class="text-gray-600">Support</div>
+                </div>
+            </div>
+
+            <!-- FAQ List -->
+            <div id="faqList" class="space-y-4">
+                <!-- FAQ items will be populated by JavaScript -->
+            </div>
+
+            <!-- No Results Message -->
+            <div id="noResults" class="hidden text-center py-12">
+                <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-search text-gray-400 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">No results found</h3>
+                <p class="text-gray-600 mb-6">Try adjusting your search terms or browse all categories</p>
+                <button onclick="clearSearch()" class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors duration-300">
+                    Clear Search
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Contact Support Section -->
+    <section class="bg-gray-100 py-16">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <div class="bg-white rounded-2xl p-8 shadow-lg">
+                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-headset text-purple-600 text-2xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Still need help?</h2>
+                <p class="text-gray-600 mb-6">Can't find what you're looking for? Our support team is here to help!</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="mailto:support@dernmarket.com" class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors duration-300 flex items-center justify-center space-x-2">
+                        <i class="fas fa-envelope"></i>
+                        <span>Email Support</span>
+                    </a>
+                    <a href="tel:+998901234567" class="bg-white text-purple-600 border-2 border-purple-600 px-6 py-3 rounded-lg hover:bg-purple-50 transition-colors duration-300 flex items-center justify-center space-x-2">
+                        <i class="fas fa-phone"></i>
+                        <span>Call Us</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <div class="flex items-center justify-center space-x-3 mb-4">
+                <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center">
+                    <i class="fas fa-store text-white"></i>
+                </div>
+                <span class="text-xl font-bold font-poppins">Dern Market</span>
+            </div>
+            <p class="text-gray-400">© 2025 Dern Market. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed top-6 right-6 z-50 space-y-4"></div>
+
+    <script>
+        // FAQ Data
+        const faqData = [
+            {
+                id: 1,
+                question: "How can I track my order?",
+                answer: "You can track your order in the 'Orders' section after logging in. Each order includes a status update, such as 'Pending', 'Processing', 'Shipped', or 'Delivered'. You'll also receive email notifications for status changes.",
+                category: "orders",
+                icon: "fas fa-truck"
+            },
+            {
+                id: 2,
+                question: "What payment methods are available?",
+                answer: "We accept cash and card payments, including Visa, MasterCard, and local payment systems. All card transactions are secured with SSL encryption for your safety.",
+                category: "payment",
+                icon: "fas fa-credit-card"
+            },
+            {
+                id: 3,
+                question: "Can I return a product?",
+                answer: "Yes, returns are accepted within 14 days of purchase, provided the product is unused and in original packaging. Contact our support team to initiate a return and receive a return authorization number.",
+                category: "orders",
+                icon: "fas fa-undo"
+            },
+            {
+                id: 4,
+                question: "How long does delivery take?",
+                answer: "Delivery typically takes 3-5 business days within Tashkent and 5-7 business days for other regions in Uzbekistan. Express delivery options are available for faster shipping.",
+                category: "shipping",
+                icon: "fas fa-shipping-fast"
+            },
+            {
+                id: 5,
+                question: "Is there a minimum order amount?",
+                answer: "No, there is no minimum order amount. You can order as many or as few items as you like. However, orders over 500,000 UZS qualify for free shipping.",
+                category: "orders",
+                icon: "fas fa-shopping-bag"
+            },
+            {
+                id: 6,
+                question: "How do I reset my password?",
+                answer: "Click on 'Forgot Password' on the login page, enter your email address, and we'll send you a secure link to reset your password. The link expires after 24 hours for security.",
+                category: "account",
+                icon: "fas fa-key"
+            },
+            {
+                id: 7,
+                question: "Can I change my order after placing it?",
+                answer: "Orders can be modified within 1 hour of placement, provided they haven't entered the processing stage. Please contact support immediately to make changes.",
+                category: "orders",
+                icon: "fas fa-edit"
+            },
+            {
+                id: 8,
+                question: "Do you offer international shipping?",
+                answer: "Currently, we only ship within Uzbekistan. We're working on expanding our shipping coverage to neighboring countries. Stay tuned for updates!",
+                category: "shipping",
+                icon: "fas fa-globe"
+            },
+            {
+                id: 9,
+                question: "What should I do if I receive a damaged product?",
+                answer: "Please report any damaged products within 48 hours of receipt. Take photos of the damage and contact our support team with your order ID for a replacement or full refund.",
+                category: "orders",
+                icon: "fas fa-exclamation-triangle"
+            },
+            {
+                id: 10,
+                question: "How can I contact customer support?",
+                answer: "You can reach our support team via email at support@dernmarket.com, call us at +998 90 123 45 67, or use the contact form on our website. We're available 24/7 to help you.",
+                category: "account",
+                icon: "fas fa-headset"
+            },
+            {
+                id: 11,
+                question: "Are there any discounts for bulk purchases?",
+                answer: "Yes, we offer attractive discounts for bulk orders. Contact our sales team for a custom quote based on your requirements. Discounts start from 10% for orders over 50 items.",
+                category: "payment",
+                icon: "fas fa-percentage"
+            },
+            {
+                id: 12,
+                question: "Can I cancel my order?",
+                answer: "Orders can be canceled before they are shipped. Check your order status in the 'Orders' section and contact support if the status is still 'Pending' or 'Processing'.",
+                category: "orders",
+                icon: "fas fa-times-circle"
+            },
+            {
+                id: 13,
+                question: "Do you have a loyalty program?",
+                answer: "We're working on an exciting loyalty program with rewards, exclusive discounts, and early access to new products. Stay tuned for the official launch!",
+                category: "account",
+                icon: "fas fa-star"
+            }
+        ];
+
+        let filteredFAQs = [...faqData];
+        let currentCategory = 'all';
+
+        // User Management Functions
+        function checkAdminRedirect() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user && user.isAdmin) {
+                window.location.href = '../admin/index.html';
+            }
+        }
+
+        function renderUserInfo() {
+            const userInfoDiv = document.getElementById('userInfo');
+            const user = JSON.parse(localStorage.getItem('user'));
+
+            if (user) {
+                userInfoDiv.innerHTML = `
+                    <div class="flex items-center space-x-4">
+                        <span class="text-gray-700 font-medium">
+                            <i class="fas fa-user mr-2"></i>
+                            ${user.name}
+                        </span>
+                        <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors duration-300">
+                            <i class="fas fa-sign-out-alt mr-2"></i>
+                            Logout
+                        </button>
+                    </div>
+                `;
+            } else {
+                userInfoDiv.innerHTML = `
+                    <div class="flex items-center space-x-4">
+                        <a href="../login/index.html" class="text-gray-600 hover:text-purple-600 transition-colors duration-300">
+                            <i class="fas fa-sign-in-alt mr-2"></i>
+                            Login
+                        </a>
+                        <span class="text-gray-400">|</span>
+                        <a href="../register/index.html" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors duration-300">
+                            <i class="fas fa-user-plus mr-2"></i>
+                            Register
+                        </a>
+                    </div>
+                `;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            localStorage.removeItem('cart');
+            renderUserInfo();
+            showToast('Successfully logged out', 'success');
+        }
+
+        // FAQ Functions
+        function renderFAQs() {
+            const faqList = document.getElementById('faqList');
+            const noResults = document.getElementById('noResults');
+            
+            if (filteredFAQs.length === 0) {
+                faqList.innerHTML = '';
+                noResults.classList.remove('hidden');
+                return;
+            }
+            
+            noResults.classList.add('hidden');
+            
+            faqList.innerHTML = filteredFAQs.map(faq => `
+                <div class="faq-item bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl" data-category="${faq.category}">
+                    <div class="faq-header p-6 cursor-pointer flex items-center justify-between hover:bg-gray-50 transition-colors duration-300" onclick="toggleFAQ(${faq.id})">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <i class="${faq.icon} text-purple-600"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-800">${faq.question}</h3>
+                        </div>
+                        <i class="fas fa-chevron-down text-gray-400 transform transition-transform duration-300" id="icon-${faq.id}"></i>
+                    </div>
+                    <div class="faq-body hidden p-6 pt-0 border-t border-gray-100" id="body-${faq.id}">
+                        <p class="text-gray-600 leading-relaxed">${faq.answer}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleFAQ(id) {
+            const body = document.getElementById(`body-${id}`);
+            const icon = document.getElementById(`icon-${id}`);
+            const isOpen = !body.classList.contains('hidden');
+            
+            // Close all other FAQs
+            document.querySelectorAll('.faq-body').forEach(el => {
+                el.classList.add('hidden');
+            });
+            document.querySelectorAll('[id^="icon-"]').forEach(el => {
+                el.classList.remove('rotate-180');
+            });
+            
+            // Toggle current FAQ
+            if (!isOpen) {
+                body.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+                body.style.animation = 'slideDown 0.3s ease-out';
+            }
+        }
+
+        function searchFAQ() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (searchTerm === '') {
+                filteredFAQs = currentCategory === 'all' ? [...faqData] : faqData.filter(faq => faq.category === currentCategory);
+            } else {
+                const baseFilter = currentCategory === 'all' ? faqData : faqData.filter(faq => faq.category === currentCategory);
+                filteredFAQs = baseFilter.filter(faq => 
+                    faq.question.toLowerCase().includes(searchTerm) || 
+                    faq.answer.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            renderFAQs();
+        }
+
+        function filterByCategory(category) {
+            currentCategory = category;
+            
+            // Update active button
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Filter FAQs
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (category === 'all') {
+                filteredFAQs = searchTerm === '' ? [...faqData] : faqData.filter(faq => 
+                    faq.question.toLowerCase().includes(searchTerm) || 
+                    faq.answer.toLowerCase().includes(searchTerm)
+                );
+            } else {
+                const categoryFAQs = faqData.filter(faq => faq.category === category);
+                filteredFAQs = searchTerm === '' ? categoryFAQs : categoryFAQs.filter(faq => 
+                    faq.question.toLowerCase().includes(searchTerm) || 
+                    faq.answer.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            renderFAQs();
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            currentCategory = 'all';
+            
+            // Reset active button
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector('.category-btn').classList.add('active');
+            
+            filteredFAQs = [...faqData];
+            renderFAQs();
+        }
+
+        // Toast notification
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            const bgColors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500',
+                warning: 'bg-yellow-500'
+            };
+            
+            const icons = {
+                success: 'fas fa-check-circle',
+                error: 'fas fa-exclamation-circle',
+                info: 'fas fa-info-circle',
+                warning: 'fas fa-exclamation-triangle'
+            };
+            
+            toast.className = `${bgColors[type]} text-white px-6 py-4 rounded-xl shadow-lg transform translate-x-full transition-transform duration-300 flex items-center space-x-3 min-w-80`;
+            toast.innerHTML = `
+                <i class="${icons[type]}"></i>
+                <span class="font-medium">${message}</span>
+                <button onclick="this.parentElement.remove()" class="ml-auto text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-x-full');
+            }, 100);
+            
+            setTimeout(() => {
+                toast.classList.add('translate-x-full');
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toastContainer.removeChild(toast);
+                    }
+                }, 300);
+            }, 5000);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAdminRedirect();
+            renderUserInfo();
+            renderFAQs();
+            
+            // Add CSS for category buttons
+            const style = document.createElement('style');
+            style.textContent = `
+                .category-btn {
+                    background-color: #f3f4f6;
+                    color: #6b7280;
+                }
+                .category-btn:hover {
+                    background-color: #e5e7eb;
+                    color: #374151;
+                }
+                .category-btn.active {
+                    background-color: #8b5cf6;
+                    color: white;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>

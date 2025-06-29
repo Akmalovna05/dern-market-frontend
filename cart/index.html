@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Dern Market</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'poppins': ['Poppins', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                        'bounce-in': 'bounceIn 0.6s ease-out',
+                        'pulse-slow': 'pulse 3s ease-in-out infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+        .glass-effect {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-inter">
+    <!-- Header -->
+    <header class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <a href="../index.html" class="flex items-center space-x-3 hover:scale-105 transition-transform duration-300">
+                    <div class="w-12 h-12 gradient-bg rounded-xl flex items-center justify-center">
+                        <i class="fas fa-store text-xl text-white"></i>
+                    </div>
+                    <div>
+                        <div class="text-xl font-bold text-gray-800 font-poppins">Dern Market</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-wider">Premium Shopping</div>
+                    </div>
+                </a>
+                
+                <!-- Navigation -->
+                <nav class="hidden md:flex items-center space-x-6">
+                    <a href="../index.html" class="text-gray-600 hover:text-orange-600 transition-colors duration-300 flex items-center space-x-2">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="index.html" class="text-orange-600 font-semibold flex items-center space-x-2">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Cart</span>
+                        <span class="bg-orange-100 text-orange-600 px-2 py-1 rounded-full text-xs font-bold" id="cartCount">0</span>
+                    </a>
+                    <a href="../orders/index.html" class="text-gray-600 hover:text-orange-600 transition-colors duration-300 flex items-center space-x-2">
+                        <i class="fas fa-box"></i>
+                        <span>Orders</span>
+                    </a>
+                    <a href="../faq/index.html" class="text-gray-600 hover:text-orange-600 transition-colors duration-300 flex items-center space-x-2">
+                        <i class="fas fa-question-circle"></i>
+                        <span>FAQ</span>
+                    </a>
+                </nav>
+                
+                <!-- User Info -->
+                <div class="user-info" id="userInfo"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <div class="flex items-center space-x-4 mb-4">
+                <div class="w-12 h-12 gradient-bg rounded-xl flex items-center justify-center">
+                    <i class="fas fa-shopping-cart text-xl text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800 font-poppins">Shopping Cart</h1>
+                    <p class="text-gray-600">Review your items and proceed to checkout</p>
+                </div>
+            </div>
+            
+            <!-- Breadcrumb -->
+            <nav class="flex items-center space-x-2 text-sm text-gray-500">
+                <a href="../index.html" class="hover:text-orange-600 transition-colors duration-300">Home</a>
+                <i class="fas fa-chevron-right text-xs"></i>
+                <span class="text-orange-600 font-medium">Cart</span>
+            </nav>
+        </div>
+
+        <!-- Cart Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Cart Items -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-bold text-gray-800">Cart Items</h2>
+                        <button onclick="clearCart()" class="text-red-500 hover:text-red-700 transition-colors duration-300 flex items-center space-x-2">
+                            <i class="fas fa-trash"></i>
+                            <span>Clear All</span>
+                        </button>
+                    </div>
+                    
+                    <div id="cartItems" class="space-y-4">
+                        <!-- Cart items will be populated here -->
+                    </div>
+                    
+                    <!-- Empty Cart State -->
+                    <div id="emptyCart" class="hidden text-center py-12">
+                        <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-shopping-cart text-gray-400 text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Your cart is empty</h3>
+                        <p class="text-gray-600 mb-6">Add some products to get started</p>
+                        <a href="../index.html" class="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors duration-300 inline-flex items-center space-x-2">
+                            <i class="fas fa-shopping-bag"></i>
+                            <span>Continue Shopping</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-2xl shadow-lg p-6 sticky top-24">
+                    <h2 class="text-xl font-bold text-gray-800 mb-6">Order Summary</h2>
+                    
+                    <!-- Summary Details -->
+                    <div class="space-y-4 mb-6">
+                        <div class="flex justify-between text-gray-600">
+                            <span>Subtotal (<span id="itemCount">0</span> items)</span>
+                            <span id="subtotal">0 UZS</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600">
+                            <span>Shipping</span>
+                            <span id="shipping">Free</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600">
+                            <span>Tax</span>
+                            <span id="tax">0 UZS</span>
+                        </div>
+                        <hr class="border-gray-200">
+                        <div class="flex justify-between text-lg font-bold text-gray-800">
+                            <span>Total</span>
+                            <span id="total">0 UZS</span>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Payment Method</h3>
+                        <div class="space-y-3">
+                            <label class="flex items-center space-x-3 p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-orange-300 transition-colors duration-300">
+                                <input type="radio" name="payment" value="card" class="text-orange-500 focus:ring-orange-500" checked>
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-credit-card text-blue-500"></i>
+                                    <span class="font-medium">Credit/Debit Card</span>
+                                </div>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-orange-300 transition-colors duration-300">
+                                <input type="radio" name="payment" value="cash" class="text-orange-500 focus:ring-orange-500">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-money-bill-wave text-green-500"></i>
+                                    <span class="font-medium">Cash on Delivery</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Promo Code -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Promo Code</h3>
+                        <div class="flex space-x-2">
+                            <input type="text" id="promoCode" placeholder="Enter promo code" class="flex-1 px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none transition-colors duration-300">
+                            <button onclick="applyPromoCode()" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors duration-300">
+                                Apply
+                            </button>
+                        </div>
+                        <div id="promoMessage" class="mt-2 text-sm hidden"></div>
+                    </div>
+
+                    <!-- Checkout Button -->
+                    <button onclick="placeOrder()" id="checkoutBtn" class="w-full bg-orange-500 text-white py-4 rounded-xl font-semibold text-lg hover:bg-orange-600 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span id="checkoutBtnText">
+                            <i class="fas fa-lock mr-2"></i>
+                            Proceed to Checkout
+                        </span>
+                        <span id="checkoutBtnLoading" class="hidden">
+                            <i class="fas fa-spinner fa-spin mr-2"></i>
+                            Processing...
+                        </span>
+                    </button>
+
+                    <!-- Security Badge -->
+                    <div class="mt-4 flex items-center justify-center space-x-2 text-sm text-gray-500">
+                        <i class="fas fa-shield-alt text-green-500"></i>
+                        <span>Secure checkout with SSL encryption</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full animate-bounce-in">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-sign-in-alt text-orange-500 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Login Required</h3>
+                <p class="text-gray-600">Please login to proceed with your order</p>
+            </div>
+            
+            <div class="flex space-x-4">
+                <button onclick="goToLogin()" class="flex-1 bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 transition-colors duration-300 font-semibold">
+                    <i class="fas fa-sign-in-alt mr-2"></i>
+                    Login
+                </button>
+                <button onclick="closeLoginModal()" class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg hover:bg-gray-300 transition-colors duration-300 font-semibold">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed top-6 right-6 z-50 space-y-4"></div>
+
+    <script>
+        let products = [];
+        let cart = [];
+
+        // User Management Functions
+        function checkAdminRedirect() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user && user.isAdmin) {
+                window.location.href = '../admin/index.html';
+            }
+        }
+
+        function renderUserInfo() {
+            const userInfoDiv = document.getElementById('userInfo');
+            const user = JSON.parse(localStorage.getItem('user'));
+
+            if (user) {
+                userInfoDiv.innerHTML = `
+                    <div class="flex items-center space-x-4">
+                        <span class="text-gray-700 font-medium">
+                            <i class="fas fa-user mr-2"></i>
+                            ${user.name}
+                        </span>
+                        <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors duration-300">
+                            <i class="fas fa-sign-out-alt mr-2"></i>
+                            Logout
+                        </button>
+                    </div>
+                `;
+            } else {
+                userInfoDiv.innerHTML = `
+                    <div class="flex items-center space-x-4">
+                        <a href="../login/index.html" class="text-gray-600 hover:text-orange-600 transition-colors duration-300">
+                            <i class="fas fa-sign-in-alt mr-2"></i>
+                            Login
+                        </a>
+                        <span class="text-gray-400">|</span>
+                        <a href="../register/index.html" class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors duration-300">
+                            <i class="fas fa-user-plus mr-2"></i>
+                            Register
+                        </a>
+                    </div>
+                `;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            localStorage.removeItem('cart');
+            renderUserInfo();
+            showToast('Successfully logged out', 'success');
+            setTimeout(() => window.location.reload(), 1000);
+        }
+
+        // Fetch products from API
+        async function fetchProducts() {
+            try {
+                const response = await fetch('https://dern-market-backend.up.railway.app/api/products', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                if (!response.ok) throw new Error('Failed to fetch products');
+                products = await response.json();
+                loadCart();
+                renderCartItems();
+            } catch (error) {
+                showToast(`Error loading products: ${error.message}`, 'error');
+            }
+        }
+
+        // Load cart from localStorage
+        function loadCart() {
+            cart = JSON.parse(localStorage.getItem('cart')) || [];
+            updateCartCount();
+        }
+
+        // Update cart count in header
+        function updateCartCount() {
+            const cartCount = document.getElementById('cartCount');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+        }
+
+        // Format price
+        function formatPrice(price) {
+            return new Intl.NumberFormat('uz-UZ').format(price);
+        }
+
+        // Render cart items
+        function renderCartItems() {
+            const cartItemsDiv = document.getElementById('cartItems');
+            const emptyCart = document.getElementById('emptyCart');
+            
+            if (cart.length === 0) {
+                cartItemsDiv.innerHTML = '';
+                emptyCart.classList.remove('hidden');
+                updateOrderSummary();
+                return;
+            }
+            
+            emptyCart.classList.add('hidden');
+            
+            cartItemsDiv.innerHTML = cart.map(item => {
+                const product = products.find(p => p.id === item.productId);
+                if (!product) return '';
+                
+                return `
+                    <div class="cart-item flex items-center space-x-4 p-4 border border-gray-200 rounded-xl hover:shadow-md transition-shadow duration-300">
+                        <div class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-image text-gray-400 text-2xl"></i>
+                        </div>
+                        
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-gray-800 mb-1">${product.name}</h3>
+                            <p class="text-gray-600 text-sm mb-2">${product.description}</p>
+                            <div class="flex items-center space-x-4">
+                                <span class="text-lg font-bold text-orange-600">${formatPrice(product.price)} UZS</span>
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="updateQuantity(${item.productId}, ${item.quantity - 1})" class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors duration-300">
+                                        <i class="fas fa-minus text-xs"></i>
+                                    </button>
+                                    <span class="w-12 text-center font-semibold">${item.quantity}</span>
+                                    <button onclick="updateQuantity(${item.productId}, ${item.quantity + 1})" class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors duration-300">
+                                        <i class="fas fa-plus text-xs"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-right">
+                            <div class="text-lg font-bold text-gray-800 mb-2">
+                                ${formatPrice(product.price * item.quantity)} UZS
+                            </div>
+                            <button onclick="removeFromCart(${item.productId})" class="text-red-500 hover:text-red-700 transition-colors duration-300">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            updateOrderSummary();
+        }
+
+        // Update quantity
+        function updateQuantity(productId, newQuantity) {
+            if (newQuantity <= 0) {
+                removeFromCart(productId);
+                return;
+            }
+            
+            const item = cart.find(i => i.productId === productId);
+            if (item) {
+                item.quantity = newQuantity;
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCount();
+                renderCartItems();
+                showToast('Quantity updated', 'success');
+            }
+        }
+
+        // Remove item from cart
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.productId !== productId);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            renderCartItems();
+            showToast('Item removed from cart', 'success');
+        }
+
+        // Clear cart
+        function clearCart() {
+            if (cart.length === 0) return;
+            
+            if (confirm('Are you sure you want to clear your cart?')) {
+                cart = [];
+                localStorage.removeItem('cart');
+                updateCartCount();
+                renderCartItems();
+                showToast('Cart cleared', 'success');
+            }
+        }
+
+        // Update order summary
+        function updateOrderSummary() {
+            const itemCount = document.getElementById('itemCount');
+            const subtotal = document.getElementById('subtotal');
+            const shipping = document.getElementById('shipping');
+            const tax = document.getElementById('tax');
+            const total = document.getElementById('total');
+            
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const subtotalAmount = cart.reduce((sum, item) => {
+                const product = products.find(p => p.id === item.productId);
+                return sum + (product ? product.price * item.quantity : 0);
+            }, 0);
+            
+            const shippingAmount = subtotalAmount >= 500000 ? 0 : 50000; // Free shipping over 500k UZS
+            const taxAmount = Math.round(subtotalAmount * 0.12); // 12% tax
+            const totalAmount = subtotalAmount + shippingAmount + taxAmount;
+            
+            itemCount.textContent = totalItems;
+            subtotal.textContent = `${formatPrice(subtotalAmount)} UZS`;
+            shipping.textContent = shippingAmount === 0 ? 'Free' : `${formatPrice(shippingAmount)} UZS`;
+            tax.textContent = `${formatPrice(taxAmount)} UZS`;
+            total.textContent = `${formatPrice(totalAmount)} UZS`;
+        }
+
+        // Apply promo code
+        function applyPromoCode() {
+            const promoCode = document.getElementById('promoCode').value.trim();
+            const promoMessage = document.getElementById('promoMessage');
+            
+            if (!promoCode) {
+                promoMessage.innerHTML = '<span class="text-red-500">Please enter a promo code</span>';
+                promoMessage.classList.remove('hidden');
+                return;
+            }
+            
+            // Mock promo code validation
+            const validCodes = {
+                'SAVE10': { discount: 0.1, message: '10% discount applied!' },
+                'WELCOME': { discount: 0.05, message: '5% welcome discount applied!' },
+                'FREESHIP': { discount: 0, message: 'Free shipping applied!' }
+            };
+            
+            if (validCodes[promoCode.toUpperCase()]) {
+                const promo = validCodes[promoCode.toUpperCase()];
+                promoMessage.innerHTML = `<span class="text-green-500"><i class="fas fa-check mr-1"></i>${promo.message}</span>`;
+                promoMessage.classList.remove('hidden');
+                showToast('Promo code applied successfully!', 'success');
+            } else {
+                promoMessage.innerHTML = '<span class="text-red-500">Invalid promo code</span>';
+                promoMessage.classList.remove('hidden');
+            }
+        }
+
+        // Show login modal
+        function showLoginModal() {
+            document.getElementById('loginModal').classList.remove('hidden');
+        }
+
+        // Close login modal
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.add('hidden');
+        }
+
+        // Go to login page
+        function goToLogin() {
+            window.location.href = '../login/index.html?from=cart';
+        }
+
+        // Place order
+        async function placeOrder() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            
+            if (!user) {
+                showLoginModal();
+                return;
+            }
+
+            if (cart.length === 0) {
+                showToast('Your cart is empty', 'warning');
+                return;
+            }
+
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            const checkoutBtnText = document.getElementById('checkoutBtnText');
+            const checkoutBtnLoading = document.getElementById('checkoutBtnLoading');
+            
+            // Show loading state
+            checkoutBtn.disabled = true;
+            checkoutBtnText.classList.add('hidden');
+            checkoutBtnLoading.classList.remove('hidden');
+
+            try {
+                const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+                
+                const response = await fetch('https://dern-market-backend.up.railway.app/api/order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        items: cart,
+                        paymentMethod: paymentMethod === 'card' ? 'karta' : 'naqd'
+                    })
+                });
+                
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to place order');
+                }
+
+                // Clear cart and redirect
+                localStorage.removeItem('cart');
+                showToast('Order placed successfully!', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = '../orders/index.html';
+                }, 2000);
+
+            } catch (error) {
+                showToast(`Error: ${error.message}`, 'error');
+            } finally {
+                // Reset button state
+                checkoutBtn.disabled = false;
+                checkoutBtnText.classList.remove('hidden');
+                checkoutBtnLoading.classList.add('hidden');
+            }
+        }
+
+        // Toast notification
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            const bgColors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500',
+                warning: 'bg-yellow-500'
+            };
+            
+            const icons = {
+                success: 'fas fa-check-circle',
+                error: 'fas fa-exclamation-circle',
+                info: 'fas fa-info-circle',
+                warning: 'fas fa-exclamation-triangle'
+            };
+            
+            toast.className = `${bgColors[type]} text-white px-6 py-4 rounded-xl shadow-lg transform translate-x-full transition-transform duration-300 flex items-center space-x-3 min-w-80`;
+            toast.innerHTML = `
+                <i class="${icons[type]}"></i>
+                <span class="font-medium">${message}</span>
+                <button onclick="this.parentElement.remove()" class="ml-auto text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-x-full');
+            }, 100);
+            
+            setTimeout(() => {
+                toast.classList.add('translate-x-full');
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toastContainer.removeChild(toast);
+                    }
+                }, 300);
+            }, 5000);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAdminRedirect();
+            renderUserInfo();
+            fetchProducts();
+        });
+    </script>
+</body>
+</html>

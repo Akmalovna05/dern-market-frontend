@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dern Market - Premium Online Shopping Experience</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <i class="fas fa-store"></i>
+                <span>Dern Market</span>
+            </div>
+            <div class="loading-spinner"></div>
+            <p>Loading your shopping experience...</p>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo" onclick="window.location.href='index.html'">
+                <div class="logo-icon">
+                    <i class="fas fa-store"></i>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-main">Dern Market</span>
+                    <span class="logo-sub">Premium Shopping</span>
+                </div>
+            </div>
+            
+            <!-- Search Bar -->
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchInput" placeholder="Search products..." class="search-input">
+                    <button class="search-clear" id="searchClear" style="display: none;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="search-suggestions" id="searchSuggestions"></div>
+            </div>
+
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="cart/index.html" class="nav-link">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Cart</span>
+                            <span class="cart-badge" id="cartBadge">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="orders/index.html" class="nav-link">
+                            <i class="fas fa-box"></i>
+                            <span>Orders</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="faq/index.html" class="nav-link">
+                            <i class="fas fa-question-circle"></i>
+                            <span>FAQ</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="user-info" id="userInfo"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-background">
+                <div class="hero-shapes">
+                    <div class="shape shape-1"></div>
+                    <div class="shape shape-2"></div>
+                    <div class="shape shape-3"></div>
+                </div>
+            </div>
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-star"></i>
+                    <span>Premium Quality Products</span>
+                </div>
+                <h1 class="hero-title">
+                    Welcome to <span class="gradient-text">Dern Market</span>
+                </h1>
+                <p class="hero-subtitle">Discover amazing products at unbeatable prices with premium shopping experience</p>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalProducts">0</div>
+                        <div class="stat-label">Products</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Support</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">Fast</div>
+                        <div class="stat-label">Delivery</div>
+                    </div>
+                </div>
+                <button class="hero-cta" onclick="scrollToProducts()">
+                    <span>Start Shopping</span>
+                    <i class="fas fa-arrow-down"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Filter Section -->
+        <section class="filter-section">
+            <div class="filter-container">
+                <div class="filter-title">
+                    <h3><i class="fas fa-filter"></i> Filter Products</h3>
+                </div>
+                <div class="filter-options">
+                    <div class="filter-group">
+                        <label>Sort by:</label>
+                        <select id="sortSelect" class="filter-select">
+                            <option value="default">Default</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="name">Name: A to Z</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Price Range:</label>
+                        <div class="price-range">
+                            <input type="range" id="priceRange" min="0" max="1000000" value="1000000" class="range-slider">
+                            <span class="price-display" id="priceDisplay">Up to 1,000,000 UZS</span>
+                        </div>
+                    </div>
+                    <button class="filter-reset" id="filterReset">
+                        <i class="fas fa-undo"></i>
+                        Reset Filters
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section class="products-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>Featured Products</span>
+                </h2>
+                <p class="section-subtitle">Browse our carefully selected collection of premium products</p>
+            </div>
+            
+            <!-- Products Grid -->
+            <div id="productsGrid" class="products-grid"></div>
+            <div id="error" class="error-message"></div>
+            
+            <!-- Pagination -->
+            <div class="pagination-container">
+                <div class="pagination" id="pagination"></div>
+                <div class="pagination-info" id="paginationInfo"></div>
+            </div>
+        </section>
+
+        <!-- Dashboard Sections -->
+        <div class="dashboard-sections">
+            <!-- Cart Section -->
+            <section class="dashboard-card cart-card" id="cartSection">
+                <div class="card-header">
+                    <div class="card-icon cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="card-title">
+                        <h3>Your Shopping Cart</h3>
+                        <p>Items ready for checkout</p>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div id="cartItems" class="items-container"></div>
+                </div>
+                <div class="card-footer">
+                    <a href="cart/index.html" class="card-button cart-button">
+                        <span>View Full Cart</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Orders Section -->
+            <section class="dashboard-card orders-card" id="ordersSection">
+                <div class="card-header">
+                    <div class="card-icon orders-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="card-title">
+                        <h3>Recent Orders</h3>
+                        <p>Track your purchases</p>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div id="orderItems" class="items-container"></div>
+                </div>
+                <div class="card-footer">
+                    <a href="orders/index.html" class="card-button orders-button">
+                        <span>View All Orders</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </section>
+
+            <!-- FAQ Section -->
+            <section class="dashboard-card faq-card" id="faqSection">
+                <div class="card-header">
+                    <div class="card-icon faq-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <div class="card-title">
+                        <h3>Need Help?</h3>
+                        <p>Frequently asked questions</p>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div id="faqItems" class="faq-container">
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <i class="fas fa-search"></i>
+                                <strong>How can I track my order?</strong>
+                            </div>
+                            <p class="faq-answer">You can track your order in the "Orders" section after logging in.</p>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <i class="fas fa-credit-card"></i>
+                                <strong>What payment methods are available?</strong>
+                            </div>
+                            <p class="faq-answer">We accept cash and card payments for your convenience.</p>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <i class="fas fa-undo"></i>
+                                <strong>Can I return a product?</strong>
+                            </div>
+                            <p class="faq-answer">Yes, returns are accepted within 14 days. Check our FAQ page for details.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="faq/index.html" class="card-button faq-button">
+                        <span>View Full FAQ</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-main">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <i class="fas fa-store"></i>
+                        <span>Dern Market</span>
+                    </div>
+                    <p class="footer-description">Your trusted premium online shopping destination with quality products and exceptional service.</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-section">
+                        <h4>Quick Links</h4>
+                        <ul>
+                            <li><a href="cart/index.html"><i class="fas fa-shopping-cart"></i> Cart</a></li>
+                            <li><a href="orders/index.html"><i class="fas fa-box"></i> Orders</a></li>
+                            <li><a href="faq/index.html"><i class="fas fa-question-circle"></i> FAQ</a></li>
+                            <li><a href="login/index.html"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Support</h4>
+                        <ul>
+                            <li><a href="#"><i class="fas fa-headset"></i> Customer Service</a></li>
+                            <li><a href="#"><i class="fas fa-truck"></i> Shipping Info</a></li>
+                            <li><a href="#"><i class="fas fa-undo"></i> Returns</a></li>
+                            <li><a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Contact Info</h4>
+                        <div class="contact-info">
+                            <p><i class="fas fa-envelope"></i> support@dernmarket.com</p>
+                            <p><i class="fas fa-phone"></i> +998 90 123 45 67</p>
+                            <p><i class="fas fa-map-marker-alt"></i> Tashkent, Uzbekistan</p>
+                            <p><i class="fas fa-clock"></i> 24/7 Support</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="footer-bottom-content">
+                <p>&copy; 2025 Dern Market. All rights reserved.</p>
+                <div class="footer-badges">
+                    <span class="badge"><i class="fas fa-shield-alt"></i> Secure</span>
+                    <span class="badge"><i class="fas fa-truck"></i> Fast Delivery</span>
+                    <span class="badge"><i class="fas fa-star"></i> Premium Quality</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Toast Notifications Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
